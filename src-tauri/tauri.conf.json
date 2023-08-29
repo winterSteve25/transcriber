@@ -14,6 +14,32 @@
     "allowlist": {
       "dialog": {
         "all": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "readFile": true,
+        "writeFile": true,
+        "exists": true,
+        "copyFile": true,
+        "createDir": true,
+        "scope": [
+          "$APPDATA/**"
+        ]
+      },
+      "http": {
+        "request": true,
+        "scope": [
+          "https://translation-api.w1nterish3re.repl.co/**"
+        ]
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": [
+          "$APPCACHE/**",
+          "$APPDATA/**"
+        ]
       }
     },
     "bundle": {
@@ -29,7 +55,7 @@
       ]
     },
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
     },
     "windows": [
       {

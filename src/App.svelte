@@ -1,22 +1,18 @@
 <script lang="ts">
-    import {AppBar, AppShell, FileDropzone, LightSwitch} from "@skeletonlabs/skeleton";
+    import Router from "svelte-spa-router";
+    import Library from "./lib/v2/Library.svelte";
+    import Reader from "./lib/v2/Reader.svelte";
+    import Uploader from "./lib/Uploader.svelte";
+    import {Toaster} from "svelte-french-toast";
+    
+    const routes = {
+        "/": Uploader,
+        "/v2": Library,
+        "/v2/read/:book": Reader,
+    }
 </script>
 
 <main class="App">
-    <AppShell>
-        <svelte:fragment slot="header">
-            <AppBar>
-                <svelte:fragment slot="lead"><h2 class="h2">Transcriber</h2></svelte:fragment>
-                <svelte:fragment slot="trail"><LightSwitch/></svelte:fragment>
-            </AppBar>
-        </svelte:fragment>
-        
-        <slot>
-            
-        </slot>
-    </AppShell>
+    <Toaster/>
+    <Router {routes}/>
 </main>
-
-<style lang="scss">
-    
-</style>
