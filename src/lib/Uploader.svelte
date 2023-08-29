@@ -1,10 +1,11 @@
 <script lang="ts">
-    import type {AutocompleteOption, PopupSettings, ToastSettings} from "@skeletonlabs/skeleton";
+    import type {AutocompleteOption, PopupSettings} from "@skeletonlabs/skeleton";
     import {Autocomplete, FileDropzone, popup, storePopup} from "@skeletonlabs/skeleton";
     import {arrow, autoUpdate, computePosition, flip, offset, shift} from '@floating-ui/dom';
     import {writeBinaryFile} from "@tauri-apps/api/fs";
     import {dialog} from "@tauri-apps/api";
     import toast from "svelte-french-toast";
+    import {Body, fetch, ResponseType} from "@tauri-apps/api/http";
 
     let files: FileList;
     let langSelectedLabel: string = '';
@@ -19,7 +20,7 @@
 
     async function getLanguages() {
         const response = await fetch("https://translation-api.w1nterish3re.repl.co/langs");
-        return await response.json();
+        return response.data;
     }
 
     function buildACOptions(langs: any): AutocompleteOption[] {
@@ -52,7 +53,7 @@
         
         if (!saveToPath) {
             toast.error("No path selected");
-            retur
+            return;
         }
 
         toast.promise(translate(saveToPath), {
@@ -68,12 +69,17 @@
         const ext = getFileExtension(file.name);
         const contentType = ext == "pdf" ? "application/pdf" : "application/epub+zip";
 
-        const response = await fetch(`https://translation-api.w1nterish3re.repl.co/translate?lang=${langSelected}&type=${ext}`, {
+        const response = await fetch("https://translation-api.w1nterish3re.repl.co/translate", {
+            responseType: ResponseType.Binary,
             method: "POST",
             headers: {
                 "Content-Type": contentType
             },
-            body: data
+            query: {
+                lang: langSelected,
+                type: ext
+            },
+            body: Body.bytes(data)
         });
 
         if (!response.ok) {
@@ -81,8 +87,7 @@
             return;
         }
 
-        const responseData = await response.arrayBuffer();
-        await writeBinaryFile(saveToPath, responseData, {});
+        await writeBinaryFile(saveToPath, response.data as ArrayBuffer, {});
     }
 
     function getFileExtension(filename: string): string {
