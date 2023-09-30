@@ -6,6 +6,9 @@
     import {dialog} from "@tauri-apps/api";
     import toast from "svelte-french-toast";
     import {Body, fetch, ResponseType} from "@tauri-apps/api/http";
+    
+    const baseURL = "https://translation-api.w1nterish3re.repl.co";
+    // const baseURL = "http://127.0.0.1:8888";
 
     let files: FileList;
     let langSelectedLabel: string = '';
@@ -19,7 +22,7 @@
     storePopup.set({computePosition, autoUpdate, flip, shift, offset, arrow});
 
     async function getLanguages() {
-        const response = await fetch("https://translation-api.w1nterish3re.repl.co/langs");
+        const response = await fetch(baseURL + "/langs");
         return response.data;
     }
 
@@ -60,7 +63,7 @@
             loading: "Translating...",
             success: "Downloaded!",
             error: err => err.toString()
-        })
+        });
     }
     
     async function translate(saveToPath: string) {
@@ -69,7 +72,7 @@
         const ext = getFileExtension(file.name);
         const contentType = ext == "pdf" ? "application/pdf" : "application/epub+zip";
 
-        const response = await fetch("https://translation-api.w1nterish3re.repl.co/translate", {
+        const response = await fetch(baseURL + "/translate", {
             responseType: ResponseType.Binary,
             method: "POST",
             headers: {

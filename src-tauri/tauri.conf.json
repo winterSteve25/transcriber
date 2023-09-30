@@ -31,7 +31,8 @@
       "http": {
         "request": true,
         "scope": [
-          "https://translation-api.w1nterish3re.repl.co/**"
+          "https://translation-api.w1nterish3re.repl.co/**",
+          "http://127.0.0.1:8888/**"
         ]
       },
       "protocol": {
